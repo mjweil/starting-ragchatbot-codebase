@@ -1,0 +1,25 @@
+{
+  "name": "starting-ragchatbot-codebase",
+  "version": "1.0.0",
+  "description": "A Retrieval-Augmented Generation (RAG) system designed to answer questions about course materials using semantic search and AI-powered responses.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/https-deeplearning-ai/starting-ragchatbot-codebase.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/https-deeplearning-ai/starting-ragchatbot-codebase/issues"
+  },
+  "homepage": "https://github.com/https-deeplearning-ai/starting-ragchatbot-codebase#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@types/node": "^24.2.1"
+  }
+}
