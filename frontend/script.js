@@ -5,7 +5,7 @@ const API_URL = '/api';
 let currentSessionId = null;
 
 // DOM elements
-let chatMessages, chatInput, sendButton, totalCourses, courseTitles, newChatButton;
+let chatMessages, chatInput, sendButton, totalCourses, courseTitles, newChatButton, themeToggle;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,8 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     totalCourses = document.getElementById('totalCourses');
     courseTitles = document.getElementById('courseTitles');
     newChatButton = document.getElementById('newChatButton');
+    themeToggle = document.getElementById('themeToggle');
     
     setupEventListeners();
+    initializeThemeWithTransition();
     createNewSession();
     loadCourseStats();
 });
@@ -32,6 +34,15 @@ function setupEventListeners() {
     
     // New chat button
     newChatButton.addEventListener('click', startNewChat);
+    
+    // Theme toggle button
+    themeToggle.addEventListener('click', toggleTheme);
+    themeToggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
     
     // Suggested questions
     document.querySelectorAll('.suggested-item').forEach(button => {
@@ -238,4 +249,118 @@ async function loadCourseStats() {
             courseTitles.innerHTML = '<span class="error">Failed to load courses</span>';
         }
     }
+}
+
+// Theme Management Functions
+function initializeTheme() {
+    // Get saved theme preference or default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    
+    // Apply theme immediately to prevent flash
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+    }
+    
+    // Update toggle button state
+    updateThemeToggleState(savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Disable button temporarily to prevent rapid clicking during transition
+    themeToggle.disabled = true;
+    themeToggle.style.pointerEvents = 'none';
+    
+    // Add immediate visual feedback with enhanced animation
+    themeToggle.style.transform = 'scale(0.85) rotate(15deg)';
+    themeToggle.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+    
+    // Apply theme transition to body with smooth transition preparation
+    document.body.style.transition = 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    
+    // Small delay to ensure transition preparation is applied
+    setTimeout(() => {
+        // Apply new theme using data-theme attribute
+        document.body.setAttribute('data-theme', newTheme);
+        
+        // Update toggle button state immediately after theme change
+        updateThemeToggleState(newTheme);
+        
+        // Reset button animation and restore functionality after theme transition
+        setTimeout(() => {
+            themeToggle.style.transform = 'scale(1) rotate(0deg)';
+            
+            // Re-enable button after animation completes
+            setTimeout(() => {
+                themeToggle.disabled = false;
+                themeToggle.style.pointerEvents = '';
+                themeToggle.style.transition = '';
+            }, 200);
+        }, 100);
+    }, 50);
+    
+    // Save preference
+    localStorage.setItem('theme', newTheme);
+    
+    // Add ripple effect for enhanced visual feedback
+    createRippleEffect(themeToggle);
+}
+
+function updateThemeToggleState(theme) {
+    if (theme === 'light') {
+        themeToggle.setAttribute('aria-label', 'Switch to dark theme');
+        themeToggle.setAttribute('title', 'Switch to dark theme');
+    } else {
+        themeToggle.setAttribute('aria-label', 'Switch to light theme');
+        themeToggle.setAttribute('title', 'Switch to light theme');
+    }
+}
+
+// Enhanced visual feedback with ripple effect
+function createRippleEffect(element) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = '50%';
+    ripple.style.top = '50%';
+    ripple.style.position = 'absolute';
+    ripple.style.borderRadius = '50%';
+    ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+    ripple.style.transform = 'translate(-50%, -50%) scale(0)';
+    ripple.style.animation = 'ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+    ripple.style.pointerEvents = 'none';
+    
+    element.style.position = 'relative';
+    element.appendChild(ripple);
+    
+    // Remove ripple after animation
+    setTimeout(() => {
+        if (ripple.parentNode) {
+            ripple.parentNode.removeChild(ripple);
+        }
+    }, 600);
+}
+
+// Smooth theme initialization with transition support using data-theme
+function initializeThemeWithTransition() {
+    // Set up initial transition styles
+    document.body.style.transition = 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    
+    // Get saved theme preference or default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    
+    // Apply theme immediately using data-theme attribute to prevent flash
+    document.body.setAttribute('data-theme', savedTheme);
+    
+    // Update toggle button state
+    updateThemeToggleState(savedTheme);
+    
+    // Clean up transition after initial load
+    setTimeout(() => {
+        document.body.style.transition = '';
+    }, 300);
 }
