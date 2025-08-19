@@ -3,10 +3,12 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* CSS Variables */
-:root {
+/* CSS Variables - Dark Theme (Default) */
+:root,
+[data-theme="dark"] {
     --primary-color: #2563eb;
     --primary-hover: #1d4ed8;
     --background: #0f172a;
@@ -22,6 +24,42 @@
     --focus-ring: rgba(37, 99, 235, 0.2);
     --welcome-bg: #1e3a5f;
     --welcome-border: #2563eb;
+    
+    /* Theme transition */
+    --theme-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Theme Variables - Using data-theme attribute */
+[data-theme="light"] {
+    /* Primary colors - maintained for brand consistency */
+    --primary-color: #1d4ed8;
+    --primary-hover: #1e40af;
+    
+    /* Light backgrounds */
+    --background: #ffffff;
+    --surface: #f8fafc;
+    --surface-hover: #f1f5f9;
+    
+    /* Dark text for good contrast */
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    
+    /* Proper border and surface colors */
+    --border-color: #cbd5e1;
+    
+    /* Message bubbles with better contrast */
+    --user-message: #1d4ed8;
+    --assistant-message: #f1f5f9;
+    
+    /* Enhanced shadows for light theme */
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+    
+    /* Focus ring with better visibility */
+    --focus-ring: rgba(29, 78, 216, 0.25);
+    
+    /* Welcome message styling */
+    --welcome-bg: #f0f9ff;
+    --welcome-border: #1d4ed8;
 }
 
 /* Base Styles */
@@ -34,6 +72,7 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
+    transition: var(--theme-transition);
 }
 
 /* Container - Full Screen */
@@ -46,12 +85,25 @@ body {
     padding: 0;
 }
 
-/* Header - Hidden */
-header {
-    display: none;
+/* App Header */
+.app-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    flex-shrink: 0;
+    box-shadow: var(--shadow);
+    z-index: 100;
 }
 
-header h1 {
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-title h1 {
     font-size: 1.75rem;
     font-weight: 700;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -65,6 +117,170 @@ header h1 {
     font-size: 0.95rem;
     color: var(--text-secondary);
     margin-top: 0.5rem;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: transparent;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle:hover {
+    background: var(--surface-hover);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.theme-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring);
+    border-color: var(--primary-color);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.theme-toggle:not(:disabled):active {
+    transform: scale(0.9);
+}
+
+/* Theme Icons */
+.theme-icon {
+    position: absolute;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: rotate(45deg) scale(0);
+}
+
+.theme-icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.theme-icon-moon {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0);
+}
+
+/* Light theme icon states */
+[data-theme="light"] .theme-icon-sun {
+    opacity: 0;
+    transform: rotate(45deg) scale(0);
+}
+
+[data-theme="light"] .theme-icon-moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* Light theme specific enhancements for better contrast */
+[data-theme="light"] .message.assistant .message-content {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .suggested-item {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+}
+
+[data-theme="light"] .suggested-item:hover {
+    background: #f9fafb;
+    border-color: #1d4ed8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .stat-item {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+}
+
+[data-theme="light"] .new-chat-button {
+    color: #374151;
+}
+
+[data-theme="light"] .new-chat-button:hover,
+[data-theme="light"] .new-chat-button:focus {
+    color: #1d4ed8;
+}
+
+[data-theme="light"] .sources-content a {
+    color: #1d4ed8;
+}
+
+[data-theme="light"] .sources-content a:hover {
+    color: #1e40af;
+}
+
+/* Additional light theme enhancements for visual hierarchy */
+[data-theme="light"] .app-header {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .message-content code {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #1e293b;
+}
+
+[data-theme="light"] .message-content pre {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #1e293b;
+}
+
+[data-theme="light"] .message-content blockquote {
+    border-left-color: #1d4ed8;
+    color: #475569;
+}
+
+[data-theme="light"] .welcome-message .message-content {
+    background: #f0f9ff;
+    border-color: #1d4ed8;
+}
+
+[data-theme="light"] .stats-header,
+[data-theme="light"] .suggested-header {
+    color: #475569;
+}
+
+[data-theme="light"] .stats-header:hover,
+[data-theme="light"] .suggested-header:hover,
+[data-theme="light"] .stats-header:focus,
+[data-theme="light"] .suggested-header:focus {
+    color: #1d4ed8;
+}
+
+/* Ripple animation for theme toggle button */
+@keyframes ripple {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
 }
 
 /* Main Content Area with Sidebar */
@@ -731,12 +947,21 @@ details[open] .suggested-header::before {
         order: 1;
     }
     
-    header {
-        padding: 1rem;
+    .app-header {
+        padding: 0.75rem 1rem;
     }
     
-    header h1 {
+    .header-title h1 {
         font-size: 1.5rem;
+    }
+    
+    .header-title .subtitle {
+        display: none;
+    }
+    
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
     }
     
     .chat-messages {
