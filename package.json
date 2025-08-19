@@ -6,7 +6,16 @@
   "directories": {
     "doc": "docs"
   },
-  "scripts": {},
+  "scripts": {
+    "format": "uv run black backend/ main.py",
+    "format:check": "uv run black --check backend/ main.py",
+    "lint": "uv run flake8 backend/ main.py",
+    "sort-imports": "uv run isort backend/ main.py",
+    "sort-imports:check": "uv run isort --check-only backend/ main.py",
+    "quality:check": "npm run format:check && npm run sort-imports:check && npm run lint",
+    "quality:fix": "npm run format && npm run sort-imports",
+    "test": "npx playwright test"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/https-deeplearning-ai/starting-ragchatbot-codebase.git"

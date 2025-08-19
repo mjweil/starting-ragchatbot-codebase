@@ -1,0 +1,17 @@
+[flake8]
+max-line-length = 88
+extend-ignore = 
+    E203,
+    W503,
+    E501,
+    F401,
+    F841,
+    E402,
+    F811
+exclude = 
+    .git,
+    __pycache__,
+    build,
+    dist,
+    chroma_db,
+    .venv
